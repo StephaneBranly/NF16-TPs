@@ -31,8 +31,10 @@ typedef T_Block* BlockChain;
 /* MENU 2 */ void AfficherTransactionsBlock(T_Block);
             T_Block* RechercherBlock(int, T_Block*);
 /* MENU 3 */ void AfficherTransactionEtudiantBlock(int, T_Block);
+/* MENU 6 */ void payer_repas(int, BlockChain);
 
 /* Fonction bonus */
 void Afficher_Transaction(T_Transaction*);
 void Tout_Afficher(BlockChain);
 void Tout_Liberer(BlockChain);
+int verif_ID(int);

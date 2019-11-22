@@ -3,12 +3,15 @@
 #include <stdlib.h>
 
 #include "tp3.h"
-int DATE=20191005;
+int DATE=20191108;
 
 int main(){
-    printf("A2019 - NF16 - TP3 Listes chainees\n\n");
+    printf("A2019 - NF16 - TP3 Listes chainees\n");
+    printf("D'AMECOURT Hortense - BRANLY Stephane\n\n");
+    printf("Date actuelle : %d\n\n",DATE);
     bool continuer=true;
     int choix;
+    float prix;
     int date_block = 0;
     T_Block* adresse_block = NULL;
     int idCompte, idCompte2;
@@ -47,18 +50,30 @@ int main(){
                     printf("| Il n existe pas de block avec cette date...\n|");
                 break;
             case 3: //Afficher toutes les transactions du jour pour un étudiant
-                printf("|  Veuillez rentrer l ID de l etudiant :\n| >");
+                printf("|  Veuillez rentrer l ID a 4 chiffres de l etudiant :\n| >");
                 scanf("%d",&idCompte);
-                AfficherTransactionEtudiantBlock(idCompte,*bc);
-                break;
+                if (verif_ID(idCompte)==0){
+                    printf("| Il y a une erreur avec l'id du compte. Veuillez recommencer. \n");
+                    break;
+                }
+            AfficherTransactionEtudiantBlock(idCompte,*bc);
+            break;
             case 4: //AFficher l’historique pour un étudiant
-                printf("|  Veuillez rentrer l ID de l etudiant :\n| >");
+                printf("|  Veuillez rentrer l ID a 4 chiffres de l etudiant :\n| >");
                 scanf("%d",&idCompte);
+                if (verif_ID(idCompte)==0){
+                    printf("| Il y a une erreur avec l'id du compte. Veuillez recommencer. \n");
+                    break;
+                }
                 consulter(idCompte, bc);
                 break;
             case 5: // Créditer un compte
-                printf("|  Veuillez rentrer l'ID du compte a crediter :\n| >");
+                printf("|  Veuillez rentrer l'ID a 4 chiffres du compte a crediter :\n| >");
                 scanf("%d",&idCompte);
+                if (verif_ID(idCompte)==0){
+                    printf("| Il y a une erreur avec l'id du compte. Veuillez recommencer. \n");
+                    break;
+                }
                 printf("|  Veuillez rentrer le montant :\n| >");
                 scanf("%f",&montant);
                 printf("|  Veuillez rentrer une description :\n| >");
@@ -66,27 +81,37 @@ int main(){
                 crediter(idCompte,montant,description,bc);
                 break;
             case 6: // Payer un repas
-                printf("|  Veuillez rentrer l'ID du compte a debiter :\n| >");
+                printf("|  Veuillez rentrer l'ID a 4 chiffres du compte a debiter :\n| >");
                 scanf("%d",&idCompte);
-                printf("|  Veuillez rentrer le montant :\n| >");
-                scanf("%f",&montant);
-                printf("|  Veuillez rentrer une description :\n| >");
-                scanf("%s",&description);
-                payer(idCompte,montant,description,bc);
+                if (verif_ID(idCompte)==0){
+                    printf("| Il y a une erreur avec l'ID du compte. Veuillez recommencer. \n|");
+                }
+                else
+                            payer_repas(idCompte, bc);
                 break;
             case 7: // Transférer des EATCoins entre deux étudiants
-                printf("|  Veuillez rentrer l'ID du compte à prelever :\n");
+                printf("|  Veuillez rentrer l'ID a 4 chiffres du compte à prelever :\n| >");
                 scanf("%d",&idCompte);
-                printf("|  Veuillez rentrer l'ID du compte à crediter :\n");
-                scanf("%d",&idCompte2);
-                printf("|  Veuillez rentrer le montant du transfert :\n");
-                scanf("%f",&montant);
-                printf("|  Veuillez rentrer une description :\n| >");
-                scanf("%s",&description);
-                if(transfert(idCompte, idCompte2, montant, description, bc))
-                    printf("| La transaction a correctement ete effectuee");
-                else
-                    printf("| La transaction n'a pas pu etre effectuee");
+                if (verif_ID(idCompte)==0){
+                    printf("| Il y a une erreur avec l'id du compte. Veuillez recommencer. \n|");
+                }
+                else{
+                    printf("|  Veuillez rentrer l'ID du compte à crediter :\n| >");
+                    scanf("%d",&idCompte2);
+                    if (verif_ID(idCompte2)==0){
+                        printf("| Il y a une erreur avec l'id du compte. Veuillez recommencer. \n|");
+                    }
+                    else {
+                        printf("|  Veuillez rentrer le montant du transfert :\n| >");
+                        scanf("%f",&montant);
+                        printf("|  Veuillez rentrer une description :\n| >");
+                        scanf("%s",&description);
+                        if(transfert(idCompte, idCompte2, montant, description, bc))
+                            printf("| La transaction a correctement ete effectuee");
+                        else
+                            printf("| La transaction n'a pas pu etre effectuee");
+                    }
+                }
                 break;
             case 8: // QUITTER
                 continuer=false;
