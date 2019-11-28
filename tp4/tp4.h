@@ -26,5 +26,6 @@ typedef T_Noeud* T_Arbre;
 T_Noeud* creer_noeud(int ,T_Inter); // Fonction 1
 void ajouter_noeud(T_Arbre*, T_Noeud*); // Fonction 2
 T_Noeud* recherche(T_Arbre ,T_Inter,int); // Fonction 3
-void Supp_noeud(T_Arbre ,T_Inter, int); // Fonction 4
+void Supp_noeud(T_Arbre*,T_Inter, int); // Fonction 4
+void modif_noeud(T_Arbre ,T_Inter,int,T_Inter); // Fonction 5
 void affiche_abr(T_Arbre); // Fonction 6
