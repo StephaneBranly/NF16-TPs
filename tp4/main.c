@@ -26,7 +26,9 @@ int main(){
         scanf("%d",&choix);
         printf("|\n|\n");
         switch(choix){
+
             case 1:
+                abr = creer_abr();
                 break;
             case 2:
                 printf("|\n| -- Afficher toutes les reservations --\n|\n");
@@ -83,6 +85,7 @@ int main(){
                 affiche_entr(abr,ID);
                 break;
             case 7:
+                detruire_arbre(&abr);
                 break;
             case 8:
                 continuer=false;
@@ -91,4 +94,6 @@ int main(){
     }
     return 0;
 }
+
+
 
