@@ -9,7 +9,7 @@ int main(){
     T_Noeud* Noeud;
     printf("A2019 - NF16 - TP4 Arbres binaires\n\n");
 
-    Inter.mini=531;
+    /*Inter.mini=531; // Exemple du TP
     Inter.maxi=602;
     Noeud = creer_noeud(12, Inter);
     ajouter_noeud(&abr,Noeud);
@@ -42,7 +42,7 @@ int main(){
     Inter.mini=725;
     Inter.maxi=730;
     Noeud = creer_noeud(5, Inter);
-    ajouter_noeud(&abr,Noeud);
+    ajouter_noeud(&abr,Noeud);*/
 
 
     bool continuer=true;
