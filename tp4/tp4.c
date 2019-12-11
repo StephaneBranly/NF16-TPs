@@ -25,7 +25,7 @@ T_Noeud* creer_noeud(int Id_entreprise,T_Inter intervalle) {
 void ajouter_noeud(T_Arbre* arb, T_Noeud *noeud){
     printf("| Ajout d'un noeud\n");
     if (verif_date(noeud->I.mini, noeud->I.maxi)!=0){
-        printf("Vos dates sont invalides");
+        printf("| Vos dates sont invalides\n");
         return;
     }
     T_Arbre abis=*arb;
@@ -38,7 +38,6 @@ void ajouter_noeud(T_Arbre* arb, T_Noeud *noeud){
             pere=abis;
             if(noeud->I.mini >= abis->I.mini){  // CLEF G du nouveau noeud sup�rieure � CLEF G du noeud actuel
                 if(abis->I.maxi >= noeud->I.mini){ // Verification de non chevauchement deplacement vers la droite
-                    printf("| Votre reservation est impossible, les dates chevauchent sur une autre reservation\n");
                     t=1;
                 }
                 else
@@ -47,7 +46,7 @@ void ajouter_noeud(T_Arbre* arb, T_Noeud *noeud){
 
             else if(noeud->I.mini <= abis->I.mini){  // CLEF G du nouveau noeud inf�rieure � CLEF G du noeud actuel
                 if(abis->I.mini <= noeud->I.maxi){ // Verification de non chevauchement deplacement vers la gauche
-                    printf("| Votre reservation est impossible, les dates chevauchent sur une autre reservation\n");
+
                     t=1;
                 }
                 else
@@ -60,6 +59,9 @@ void ajouter_noeud(T_Arbre* arb, T_Noeud *noeud){
             pere->g=noeud;
         if(t!=1)
             printf("| Le noeud a bien ete ajoute\n");
+        else{
+            printf("| Votre reservation est impossible, les dates chevauchent sur une autre reservation\n");
+        }
     }
 }
 
@@ -71,8 +73,8 @@ T_Noeud* recherche(T_Arbre abr ,T_Inter intervalle,int Id_entreprise){
     T_Noeud* Noeud_Parcours;
         Noeud_Parcours = abr;
         if (verif_date(intervalle.mini, intervalle.maxi)!=0){
-            printf("Vos dates sont invalides");
-            return;
+            printf("| Vos dates sont invalides\n");
+            return NULL;
         }
         while(Noeud_Parcours != NULL){ // On parcours l'arbre tant que nous sommes sur un noeud de l'arbre
             if(Noeud_Parcours->ID_ent == Id_entreprise){ // V�rification qu'il s'agit de la bonne ID entreprise
@@ -113,20 +115,22 @@ T_Noeud* recherche(T_Arbre abr ,T_Inter intervalle,int Id_entreprise){
             }
 
             if(Noeud_Parcours->d != NULL && Noeud_Parcours->g != NULL){ // Cas ou il y a 2 fils
+                Noeud_Pere=Noeud_Parcours;
                 Noeud_Parcours=Noeud_Parcours->g;
-                while(Noeud_Parcours->d!=NULL)
-                    Noeud_Parcours=Noeud_Parcours->d;
-                Supp_noeud(abr,Noeud_Parcours->I,Noeud_Parcours->ID_ent);
-                if(Noeud_Pere->I.mini > Noeud_Parcours->I.mini) // On doit le rattacher en tant que fils gauche du p�re
-                    Noeud_Pere->g = Noeud_Parcours;
-                else                                            // On doit le rattacher en tant que fils droit du p�re
-                    Noeud_Pere->d = Noeud_Parcours;
-
-                Noeud_Parcours->g = Noeud_a_sup->g;
-                Noeud_Parcours->d = Noeud_a_sup->d;
-
-                if(Noeud_a_sup==*abr) // Cas o� on supprimer la racine
-                    *abr=Noeud_Parcours;
+                if (Noeud_Parcours != NULL){
+                    while(Noeud_Parcours->d!=NULL){
+                        Noeud_Pere = Noeud_Parcours;
+                        Noeud_Parcours=Noeud_Parcours->d;
+                    }
+                    Noeud_a_sup->I.mini=Noeud_Parcours->I.mini;
+                    Noeud_a_sup->I.maxi=Noeud_Parcours->I.maxi;
+                    Noeud_a_sup->ID_ent=Noeud_Parcours->ID_ent;    // On rebranche au fils gauche
+                    if(Noeud_Pere!=Noeud_a_sup)                    // Verification qu'on est pas sur un fils direct gauche du noeud à supprimer
+                        Noeud_Pere->d = Noeud_Parcours->g;
+                    else
+                        Noeud_Pere->g = Noeud_Parcours->g;
+                    free(Noeud_Parcours);
+                }
             }
             else{  // Cas ou il y a entre 0 et 1 fils
                 if(Noeud_Parcours->d != NULL) // On rebranche au fils droit
@@ -141,10 +145,9 @@ T_Noeud* recherche(T_Arbre abr ,T_Inter intervalle,int Id_entreprise){
 
                 if(Noeud_a_sup==*abr) // Cas o� on supprimer la racine
                     *abr=Noeud_Fils;
-
-
+                free(Noeud_a_sup);
             }
-            printf("| Le noeud a correctement ete detache\n");
+            printf("| Le noeud a correctement ete supprime\n");
         }
         else
             printf("| Le noeud n'existe pas, il n'a donc pas pu etre supprime...\n");
@@ -153,14 +156,38 @@ T_Noeud* recherche(T_Arbre abr ,T_Inter intervalle,int Id_entreprise){
 
  /* Fonction 5 */
  void modif_noeud(T_Arbre abr , T_Inter intervalle,int Id_entreprise,T_Inter Nouvelntervalle){
+    T_Arbre abis=abr;
 
+    int t=0;
         T_Noeud* Noeud_a_modif=recherche(abr,intervalle,Id_entreprise); // Recherche du noeud dans l'abre
         if ((Noeud_a_modif!=NULL)&&(verif_date(Nouvelntervalle.maxi,Nouvelntervalle.mini)==0)){
+                 while((abis!=NULL) && (t!=1)){
+            if(Nouvelntervalle.mini >= abis->I.mini){  // CLEF G du nouveau noeud sup�rieure � CLEF G du noeud actuel
+                if(abis->I.maxi >= Nouvelntervalle.mini){ // Verification de non chevauchement deplacement vers la droite
+                    printf("| Votre reservation est impossible, les dates chevauchent sur une autre reservation\n");
+                    t=1;
+                }
+                else
+                    abis=abis->d;
+            }
+
+            else if(Nouvelntervalle.mini <= abis->I.mini){  // CLEF G du nouveau noeud inf�rieure � CLEF G du noeud actuel
+                if(abis->I.mini <= Nouvelntervalle.maxi){ // Verification de non chevauchement deplacement vers la gauche
+                    printf("| Votre reservation est impossible, les dates chevauchent sur une autre reservation\n");
+                    t=1;
+                }
+                else
+                    abis=abis->g;
+            }
+        }
+        if(t!=1){
             Supp_noeud(&abr,intervalle,Id_entreprise); // Detachement du noeud de l'arbre
-            Noeud_a_modif->I.mini = Nouvelntervalle.mini; // Modification de l'intervalle du noeud
-            Noeud_a_modif->I.maxi = Nouvelntervalle.maxi;
+            Noeud_a_modif=creer_noeud(Id_entreprise,Nouvelntervalle);
             ajouter_noeud (&abr, Noeud_a_modif); // rattachement du noeud dans l'arbre
             printf("| Le noeud a bien ete modifie\n");
+        }
+            else
+            printf("| Le noeud n'a pas pu etre modifie\n");
         }
         else
             printf("| Le noeud n'a pas pu etre modifie\n");
@@ -201,13 +228,17 @@ T_Arbre creer_abr() {
 /* Fonction 9 */
 
 void detruire_arbre(T_Arbre *abr){
-    if (abr== NULL)
+    if (*abr== NULL){
         free(abr);
-    else{
-       detruire_arbre((*abr)->g);
-       detruire_arbre((*abr)->d);
-       Supp_noeud(abr, (*abr)->I, (*abr)->ID_ent);
     }
+    else{
+       detruire_arbre(&((*abr)->g));
+       detruire_arbre(&((*abr)->d));
+       Supp_noeud(abr, (*abr)->I, (*abr)->ID_ent);
+       free(*abr);
+    }
+
+}
 
 
 
@@ -219,23 +250,21 @@ void detruire_arbre(T_Arbre *abr){
 int verif_date(int a, int b){
     int resta, restb;
     int res= 0;
-    if ((a>1231)|| (b>1231)||(a<101)||(b<101)){
+    if ((a>1231)|| (b>1231)||(a<101)||(b<101))
         res=1;
-    }
     resta=a%100;
     restb=b%100;
     a=a/100;
     b=b/100;
-    if ((resta>31)|| (restb>31)){
+    if ((resta>31)|| (restb>31))
         res=1;
-    }
     if ((a>9)||(b>9)){
-        if ((a>12)||(b>12)){
+        if ((a>12)||(b>12))
              res=1;
-    }
     }
     return res;
 }
+
 
 
 

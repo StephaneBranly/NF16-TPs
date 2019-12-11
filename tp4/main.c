@@ -8,6 +8,43 @@ int main(){
     T_Inter Inter2;
     T_Noeud* Noeud;
     printf("A2019 - NF16 - TP4 Arbres binaires\n\n");
+
+    Inter.mini=531;
+    Inter.maxi=602;
+    Noeud = creer_noeud(12, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+    Inter.mini=320;
+    Inter.maxi=322;
+    Noeud = creer_noeud(14, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+    Inter.mini=714;
+    Inter.maxi=715;
+    Noeud = creer_noeud(10, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+    Inter.mini=819;
+    Inter.maxi=821;
+    Noeud = creer_noeud(2, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+    Inter.mini=214;
+    Inter.maxi=220;
+    Noeud = creer_noeud(12, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+    Inter.mini=412;
+    Inter.maxi=415;
+    Noeud = creer_noeud(10, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+    Inter.mini=725;
+    Inter.maxi=730;
+    Noeud = creer_noeud(5, Inter);
+    ajouter_noeud(&abr,Noeud);
+
+
     bool continuer=true;
     int choix;
     while(continuer==true){
@@ -25,8 +62,8 @@ int main(){
 
         scanf("%d",&choix);
         printf("|\n|\n");
-        switch(choix){
 
+        switch(choix){
             case 1:
                 abr = creer_abr();
                 break;
@@ -68,14 +105,7 @@ int main(){
                 scanf("%d",&Inter.mini);
                 printf("| Rentrez la borne superieure de l'intervalle :\n| >");
                 scanf("%d",&Inter.maxi);
-                Noeud = recherche(abr,Inter,ID); // Sauvegarde du noeud pour effectuer un free par la suite
-                if(Noeud!=NULL){
-                    Supp_noeud(&abr , Inter, ID);
-                    free(Noeud);
-                    printf("| Le noeud a correctement ete supprime\n");
-                }
-                else
-                    printf("| Le noeud n'a pas pu etre supprime\n");
+                Supp_noeud(&abr, Inter, ID);
                 break;
             case 6:
                 printf("|\n| -- Afficher les reservations d'une entreprise --\n|\n");
